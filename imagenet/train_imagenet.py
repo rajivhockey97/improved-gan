@@ -50,7 +50,7 @@ def main(_):
                     generator=Generator(),
                     train_func=train, discriminator_func=discriminator,
                     build_model_func=build_model, config=FLAGS,
-                    devices=["gpu:0"] #, "gpu:4"]
+                    devices=["device:GPU:0"] #, "gpu:4"]
                     )
 
         if FLAGS.is_train:

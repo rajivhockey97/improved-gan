@@ -5,7 +5,7 @@ from ops import avg_grads
 from model import read_and_decode_with_labels
 from model import get_vars
 IMSIZE = 128
-filename = '/media/NAS_SHARED/imagenet/imagenet_train_labeled_' + str(IMSIZE) + '.tfrecords'
+filename = '/mnt/disks/scratch/imagenet_tmp_files/train/train-00000-of-01024'
 
 
 def build_model(self):
@@ -66,11 +66,11 @@ def build_model_single_gpu(self, gpu_idx):
     G, zs = self.generator(is_ref=False)
 
     if gpu_idx == 0:
-        G_means = tf.reduce_mean(G, 0, keep_dims=True)
-        G_vars = tf.reduce_mean(tf.square(G - G_means), 0, keep_dims=True)
+        G_means = tf.reduce_mean(G, 0, keepdims=True)
+        G_vars = tf.reduce_mean(tf.square(G - G_means), 0, keepdims=True)
         G = tf.Print(G, [tf.reduce_mean(G_means), tf.reduce_mean(G_vars)], "generator mean and average var", first_n=1)
-        image_means = tf.reduce_mean(images, 0, keep_dims=True)
-        image_vars = tf.reduce_mean(tf.square(images - image_means), 0, keep_dims=True)
+        image_means = tf.reduce_mean(images, 0, keepdims=True)
+        image_vars = tf.reduce_mean(tf.square(images - image_means), 0, keepdims=True)
         images = tf.Print(images, [tf.reduce_mean(image_means), tf.reduce_mean(image_vars)], "image mean and average var", first_n=1)
         self.Gs = []
         self.zses = []

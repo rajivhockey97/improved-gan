@@ -6,7 +6,7 @@ import tensorflow as tf
 from ops import *
 from utils import *
 
-filename = "/media/NAS_SHARED/imagenet/imagenet_train_128.tfrecords"
+filename = "/mnt/disks/scratch/imagenet_tmp_files/train/train-00000-of-01024"
 
 class DCGAN(object):
     def __init__(self, sess, image_size=108, is_crop=True,
@@ -393,8 +393,8 @@ class VBNL(object):
                                       [shape[0] // 2, shape[1], shape[2], shape[3]])
             else:
                 assert False
-            self.mean = tf.reduce_mean(half, [0, 1, 2], keep_dims=True)
-            self.mean_sq = tf.reduce_mean(tf.square(half), [0, 1, 2], keep_dims=True)
+            self.mean = tf.reduce_mean(half, [0, 1, 2], keepdims=True)
+            self.mean_sq = tf.reduce_mean(tf.square(half), [0, 1, 2], keepdims=True)
             self.batch_size = int(half.get_shape()[0])
             assert x is not None
             assert self.mean is not None
@@ -421,8 +421,8 @@ class VBNL(object):
         with tf.variable_scope(self.name) as scope:
             new_coeff = 1. / (self.batch_size + 1.)
             old_coeff = 1. - new_coeff
-            new_mean = tf.reduce_mean(x, [1, 2], keep_dims=True)
-            new_mean_sq = tf.reduce_mean(tf.square(x), [1, 2], keep_dims=True)
+            new_mean = tf.reduce_mean(x, [1, 2], keepdims=True)
+            new_mean_sq = tf.reduce_mean(tf.square(x), [1, 2], keepdims=True)
             mean = new_coeff * new_mean + old_coeff * self.mean
             mean_sq = new_coeff * new_mean_sq + old_coeff * self.mean_sq
             out = self._normalize(x, mean, mean_sq, "live")
@@ -491,8 +491,8 @@ class VBNLP(object):
                                       [shape[0] // 2, shape[1], shape[2], shape[3]])
             else:
                 assert False
-            self.mean = tf.reduce_mean(half, [0], keep_dims=True)
-            self.mean_sq = tf.reduce_mean(tf.square(half), [0], keep_dims=True)
+            self.mean = tf.reduce_mean(half, [0], keepdims=True)
+            self.mean_sq = tf.reduce_mean(tf.square(half), [0], keepdims=True)
             self.batch_size = int(half.get_shape()[0])
             assert x is not None
             assert self.mean is not None
@@ -588,8 +588,8 @@ class VBN(object):
                                       [shape[0] // 2, shape[1], shape[2], shape[3]])
             else:
                 assert False
-            self.mean = tf.reduce_mean(half, [0, 1, 2], keep_dims=True)
-            self.mean_sq = tf.reduce_mean(tf.square(half), [0, 1, 2], keep_dims=True)
+            self.mean = tf.reduce_mean(half, [0, 1, 2], keepdims=True)
+            self.mean_sq = tf.reduce_mean(tf.square(half), [0, 1, 2], keepdims=True)
             self.batch_size = int(half.get_shape()[0])
             assert x is not None
             assert self.mean is not None
@@ -615,8 +615,8 @@ class VBN(object):
         with tf.variable_scope(self.name) as scope:
             new_coeff = 1. / (self.batch_size + 1.)
             old_coeff = 1. - new_coeff
-            new_mean = tf.reduce_mean(x, [1, 2], keep_dims=True)
-            new_mean_sq = tf.reduce_mean(tf.square(x), [1, 2], keep_dims=True)
+            new_mean = tf.reduce_mean(x, [1, 2], keepdims=True)
+            new_mean_sq = tf.reduce_mean(tf.square(x), [1, 2], keepdims=True)
             mean = new_coeff * new_mean + old_coeff * self.mean
             mean_sq = new_coeff * new_mean_sq + old_coeff * self.mean_sq
             out = self._normalize(x, mean, mean_sq, "live")

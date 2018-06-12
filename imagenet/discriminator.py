@@ -115,7 +115,7 @@ def discriminator(self, image, reuse=False, y=None, prefix=""):
     class_logits = linear(x, num_classes, 'd_indiv_logits')
 
 
-    image_means = tf.reduce_mean(image, 0, keep_dims=True)
+    image_means = tf.reduce_mean(image, 0, keepdims=True)
     mean_sub_image = image - image_means
     image_vars = tf.reduce_mean(tf.square(mean_sub_image), 0)
 
@@ -130,7 +130,7 @@ def discriminator(self, image, reuse=False, y=None, prefix=""):
     class_logits = tf.concat(1, [positive_class_logits, tf.expand_dims(generated_class_logits, 1)])
     """
 
-    mx = tf.reduce_max(positive_class_logits, 1, keep_dims=True)
+    mx = tf.reduce_max(positive_class_logits, 1, keepdims=True)
     safe_pos_class_logits = positive_class_logits - mx
 
     gan_logits = tf.log(tf.reduce_sum(tf.exp(safe_pos_class_logits), 1)) + tf.squeeze(mx) - generated_class_logits
