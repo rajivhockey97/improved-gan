@@ -15,16 +15,17 @@ def build_model(self):
     d_opt = tf.train.AdamOptimizer(config.discriminator_learning_rate, beta1=config.beta1)
     g_opt = tf.train.AdamOptimizer(config.generator_learning_rate, beta1=config.beta1)
 
-    for idx, device in enumerate(self.devices):
-        with tf.device("/%s" % device):
-            with tf.name_scope("device_%s" % idx):
-                with variables_on_gpu0():
-                    build_model_single_gpu(self, idx)
-                    d_grads = d_opt.compute_gradients(self.d_losses[-1], var_list=self.d_vars)
-                    g_grads = g_opt.compute_gradients(self.g_losses[-1], var_list=self.g_vars)
-                    all_d_grads.append(d_grads)
-                    all_g_grads.append(g_grads)
-                    tf.get_variable_scope().reuse_variables()
+    with tf.variable_scope(tf.get_variable_scope()):
+        for idx, device in enumerate(self.devices):
+            with tf.device("/%s" % device):
+                with tf.name_scope("device_%s" % idx):
+                    with variables_on_gpu0():
+                        build_model_single_gpu(self, idx)
+                        d_grads = d_opt.compute_gradients(self.d_losses[-1], var_list=self.d_vars)
+                        g_grads = g_opt.compute_gradients(self.g_losses[-1], var_list=self.g_vars)
+                        all_d_grads.append(d_grads)
+                        all_g_grads.append(g_grads)
+                        tf.get_variable_scope().reuse_variables()
     avg_d_grads = avg_grads(all_d_grads)
     avg_g_grads = avg_grads(all_g_grads)
     self.d_optim = d_opt.apply_gradients(avg_d_grads)
