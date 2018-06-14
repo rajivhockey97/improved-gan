@@ -344,6 +344,7 @@ def read_and_decode_with_labels(filename_queue):
     channels = tf.cast(features['image/channels'], tf.int32)
     image = tf.reshape(image, [height, width, channels]) 
     image = tf.image.resize_bicubic([image],[128, 128])
+
     image = tf.reshape(image, [128, 128, 3])
     
     image = tf.cast(image, tf.float32) * (2. / 255) - 1.
