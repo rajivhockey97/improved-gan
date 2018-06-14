@@ -40,8 +40,8 @@ def merge(images, size):
     img = np.zeros((h * size[0], w * size[1], 3))
 
     for idx, image in enumerate(images):
-        i = idx % size[1]
-        j = idx / size[1]
+        i = int(idx % size[1])
+        j = int(idx / size[1])
         img[j*h:j*h+h, i*w:i*w+w, :] = image
 
     return img

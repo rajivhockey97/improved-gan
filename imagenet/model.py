@@ -331,17 +331,24 @@ def read_and_decode_with_labels(filename_queue):
     features = tf.parse_single_example(
             serialized_example,
             features={
-                'image_raw': tf.FixedLenFeature([], tf.string),
-                'label' : tf.FixedLenFeature([], tf.int64)
+                'image/height':tf.FixedLenFeature([],tf.int64),
+                'image/width':tf.FixedLenFeature([],tf.int64),
+                'image/channels':tf.FixedLenFeature([],tf.int64),
+                'image/encoded': tf.FixedLenFeature((), tf.string),
+                'image/class/label' : tf.FixedLenFeature([], tf.int64)
             })
 
-    image = tf.decode_raw(features['image_raw'], tf.uint8)
-    image.set_shape(128 * 128 * 3)
+    image = tf.image.decode_image(features['image/encoded'], channels=3)
+    height = tf.cast(features['image/height'], tf.int32)
+    width = tf.cast(features['image/width'], tf.int32)
+    channels = tf.cast(features['image/channels'], tf.int32)
+    image = tf.reshape(image, [height, width, channels]) 
+    image = tf.image.resize_bicubic([image],[128, 128])
     image = tf.reshape(image, [128, 128, 3])
-
+    
     image = tf.cast(image, tf.float32) * (2. / 255) - 1.
 
-    label = tf.cast(features['label'], tf.int32)
+    label = tf.cast(features['image/class/label'], tf.int32)
 
     return image, label
 
